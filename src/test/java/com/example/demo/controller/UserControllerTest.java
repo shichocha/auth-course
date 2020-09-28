@@ -62,6 +62,36 @@ public class UserControllerTest {
     }
 
     @Test
+    public void createUserPasswordMismatchTest(){
+        when(encoder.encode("testPassword")).thenReturn("thisIsHashed");
+
+        CreateUserRequest request = new CreateUserRequest();
+        request.setUsername("testUser");
+        request.setPassword("testPassword");
+        request.setConfirmPassword("errorPassword");
+
+        ResponseEntity<User> response = userController.createUser(request);
+
+        assertNotNull(response);
+        assertEquals(400, response.getStatusCodeValue());
+    }
+
+    @Test
+    public void createUserPasswordtooShortTest(){
+        when(encoder.encode("testPassword")).thenReturn("thisIsHashed");
+
+        CreateUserRequest request = new CreateUserRequest();
+        request.setUsername("testUser");
+        request.setPassword("1234");
+        request.setConfirmPassword("1234");
+
+        ResponseEntity<User> response = userController.createUser(request);
+
+        assertNotNull(response);
+        assertEquals(400, response.getStatusCodeValue());
+    }
+
+    @Test
     public void test_findById(){
         long id = 1L;
         User user = new User();
